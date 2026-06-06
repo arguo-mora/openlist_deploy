@@ -1,7 +1,4 @@
 #!/bin/bash
-# 如果通过管道执行（curl ... | bash），立即切 stdin 到终端
-# 必须放在最顶部，抢在 bash 缓冲后续脚本内容之前
-[ ! -t 0 ] && exec < /dev/tty
 #==============================================================================
 # OpenList + qBittorrent + Aria2 一键部署脚本 (Debian 12 / Ubuntu)
 # 用法: bash deploy.sh  (root 用户)
@@ -23,6 +20,12 @@
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
+
+# 管道安全：如果 stdin 不是终端（curl|bash），覆盖 read 从 /dev/tty 读取用户输入
+# 不能用 exec < /dev/tty，因为 bash 还要从 pipe 读后续脚本内容
+if [ ! -t 0 ]; then
+    read() { builtin read "$@" < /dev/tty; }
+fi
 
 # ---- 可配置默认值 ----
 TZ="${TZ:-Asia/Shanghai}"
