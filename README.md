@@ -2,10 +2,26 @@
 
 在 Debian 12 / Ubuntu 上一键部署 **OpenList + qBittorrent + Aria2** 离线下载环境。
 
-## 快速开始
+## 一键部署
 
 ```bash
-bash deploy.sh
+curl -fsSL https://openlist-deploy.pages.dev/deploy.sh | bash
+```
+
+带参数的非交互模式：
+
+```bash
+curl -fsSL https://openlist-deploy.pages.dev/deploy.sh | bash -s -- \
+  --domain example.com \
+  --email admin@example.com \
+  --aria2 \
+  -y
+```
+
+镜像地址：
+
+```bash
+curl -fsSL https://olist.upgyc.top/deploy.sh | bash
 ```
 
 ## CLI 参数
