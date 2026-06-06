@@ -382,7 +382,7 @@ if [ -z "$HAS_DOMAIN" ]; then
         HAS_DOMAIN="yes"
     fi
 else
-    echo -e "  OpenList domain: ${DOMAIN:-（no domain, direct IP access）}"
+    echo -e "  OpenList domain: ${DOMAIN:-(no domain, direct IP access)}"
 fi
 
 # qBittorrent domain
@@ -473,13 +473,13 @@ fi
 # Confirmation
 echo ""
 echo -e "${BOLD}━━━━━━━━━━ Configuration Summary ━━━━━━━━━━${NC}"
-echo "  OpenList:       ${DOMAIN:-（no domain, direct IP access）}"
-echo "  qBittorrent:    ${QBIT_DOMAIN:-（no dedicated domain）}"
+echo "  OpenList:       ${DOMAIN:-(no domain, direct IP access)}"
+echo "  qBittorrent:    ${QBIT_DOMAIN:-(no dedicated domain)}"
 echo "  Aria2:          ${INSTALL_ARIA2}"
 if [ "$INSTALL_ARIA2" = "yes" ]; then
     echo "  Aria2 BT port:  ${ARIA2_BT_PORT}"
 fi
-echo "  Email:          ${EMAIL:-（not configured）}"
+echo "  Email:          ${EMAIL:-(not configured)}"
 echo "  Deployment dir: $BASE_DIR"
 echo "  BT port:        $BT_PORT"
 echo "  Timezone:       $TZ"
@@ -504,7 +504,7 @@ if [ "$EUID" -ne 0 ]; then
     err "Please run this script as root"; exit 1
 fi
 echo -e "${GREEN}  ✓ root privileges${NC}"
-echo -e "${GREEN}  ✓ OpenList: ${DOMAIN:-（no domain, direct IP access）}${NC}"
+echo -e "${GREEN}  ✓ OpenList: ${DOMAIN:-(no domain, direct IP access)}${NC}"
 
 if [ -f /etc/os-release ]; then
     . /etc/os-release
