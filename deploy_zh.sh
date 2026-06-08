@@ -868,6 +868,9 @@ server {
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection "upgrade";
         client_max_body_size 100m;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+        proxy_connect_timeout 60s;
     }
 }
 NGINX_EOF
@@ -907,9 +910,10 @@ server {
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection "upgrade";
         client_max_body_size 100m;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+        proxy_connect_timeout 60s;
     }
-}
-QBIT_NGINX_EOF
         ln -sf /etc/nginx/sites-available/qbittorrent /etc/nginx/sites-enabled/qbittorrent
         echo -e "${GREEN}  ✓ qBittorrent Nginx 配置已生成${NC}"
     fi
