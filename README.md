@@ -22,11 +22,7 @@ The script is safe to re-run — completed steps are automatically skipped.
 curl -fsSL https://olist.upgyc.top/deploy.sh | bash
 ```
 
-Mirror (China):
-
-```bash
-curl -fsSL https://olist.upgyc.top/deploy.sh | bash
-```
+> For Chinese users, replace `deploy.sh` with `deploy_zh.sh`.
 
 Non-interactive mode with CLI args:
 
@@ -38,10 +34,6 @@ curl -fsSL https://olist.upgyc.top/deploy.sh | bash -s -- \
   -y
 ```
 
-> **Chinese version**: Replace `deploy.sh` with `deploy_zh.sh` in the URLs above for the Chinese-language script.
-> ```
-> curl -fsSL https://olist.upgyc.top/deploy_zh.sh | bash
-> ```
 
 ## CLI Arguments
 

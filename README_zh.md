@@ -22,6 +22,8 @@
 curl -fsSL https://olist.upgyc.top/deploy_zh.sh | bash
 ```
 
+> English version: replace `deploy_zh.sh` with `deploy.sh`.
+
 带参数的非交互模式：
 
 ```bash
