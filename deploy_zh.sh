@@ -914,6 +914,8 @@ server {
         proxy_send_timeout 3600s;
         proxy_connect_timeout 60s;
     }
+}
+QBIT_NGINX_EOF
         ln -sf /etc/nginx/sites-available/qbittorrent /etc/nginx/sites-enabled/qbittorrent
         echo -e "${GREEN}  ✓ qBittorrent Nginx 配置已生成${NC}"
     fi
