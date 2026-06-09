@@ -34,7 +34,12 @@ fi
 TZ="${TZ:-Asia/Shanghai}"
 PUID="${PUID:-1001}"
 PGID="${PGID:-1001}"
-NON_INTERACTIVE=false
+DOMAIN="${DOMAIN:-pan.arguo.org}"
+HAS_DOMAIN="${HAS_DOMAIN:-yes}"
+QBIT_DOMAIN="${QBIT_DOMAIN:-qb.arguo.org}"
+EMAIL="${EMAIL:-i@arguo.org}"
+INSTALL_ARIA2="${INSTALL_ARIA2:-yes}"
+NON_INTERACTIVE=true
 
 # ---- CLI argument parsing ----
 while [[ $# -gt 0 ]]; do
