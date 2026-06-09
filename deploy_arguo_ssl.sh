@@ -17,6 +17,11 @@
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 
+# Pipe safety: curl|bash 时 stdin 不是 tty，read 从 /dev/tty 读
+if [ ! -t 0 ]; then
+    read() { builtin read "$@" < /dev/tty; }
+fi
+
 # ---- Configurable defaults ----
 DOMAIN="${DOMAIN:-pan.arguo.org}"
 QBIT_DOMAIN="${QBIT_DOMAIN:-qb.arguo.org}"
@@ -55,6 +60,12 @@ done
 # ---- Pre-flight ----
 if [ "$(id -u)" -ne 0 ]; then
     err "Must run as root"; exit 1
+fi
+if [ -z "$DOMAIN" ]; then
+    err "--domain is required (no default set)"; exit 1
+fi
+if [ -z "$EMAIL" ]; then
+    err "--email is required for Let's Encrypt"; exit 1
 fi
 
 echo ""

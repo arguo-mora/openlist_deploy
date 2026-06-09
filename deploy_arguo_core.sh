@@ -284,7 +284,7 @@ print_final_report() {
         if [ "$HAS_DOMAIN" = "yes" ] && [ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
             echo -e "  OpenList:      ${GREEN}https://$DOMAIN${NC}"
         elif [ "$HAS_DOMAIN" = "yes" ]; then
-            echo -e "  OpenList:      http://$DOMAIN ${YELLOW}(HTTPS not yet active, retry: certbot --nginx)${NC}"
+            echo -e "  OpenList:      http://$DOMAIN ${YELLOW}(HTTPS not yet active, run deploy_arguo_ssl.sh first)${NC}"
         else
             echo -e "  OpenList:      http://$(curl -s --connect-timeout 5 --max-time 10 ifconfig.me 2>/dev/null || echo 'SERVER_IP'):5244"
         fi
