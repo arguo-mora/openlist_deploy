@@ -83,13 +83,21 @@ fi
 
 # ---- Install Nginx + Certbot ----
 step_header "Nginx + Certbot Installation"
-apt update -qq && apt install -y -qq nginx certbot python3-certbot-nginx
+apt update -qq && apt install -y -qq nginx certbot python3-certbot-nginx || {
+    err "apt install failed"; exit 1
+}
 systemctl enable nginx --quiet && systemctl start nginx
 if systemctl is-active --quiet nginx; then
     echo -e "${GREEN}  ✓ Nginx and Certbot installed and running${NC}"
 else
     err "Nginx failed to start"; exit 1
 fi
+
+# ---- Pre-check: port 80 reachable ----
+step_header "Port 80 Reachability Check"
+info "Make sure cloud firewall / security group allows inbound TCP port 80 and 443"
+info "Otherwise Let's Encrypt HTTP-01 challenge will fail"
+echo ""
 
 # ---- Nginx Config: OpenList ----
 step_header "Nginx Reverse Proxy Config"
@@ -169,24 +177,34 @@ fi
 
 # ---- SSL Certificate: OpenList ----
 step_header "SSL Certificate — $DOMAIN"
-certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" 2>&1
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}  ✓ SSL certificate issued for $DOMAIN${NC}"
+if [ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
+    echo -e "${GREEN}  ✓ Certificate already exists for $DOMAIN — skipping${NC}"
 else
-    err "SSL certificate request failed for $DOMAIN"
-    err "Check: DNS resolves to this server? dig +short $DOMAIN"
-    exit 1
+    certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" 2>&1
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}  ✓ SSL certificate issued for $DOMAIN${NC}"
+    else
+        err "SSL certificate request failed for $DOMAIN"
+        err "  1. Check DNS:    dig +short $DOMAIN"
+        err "  2. Check port 80: curl -I http://$DOMAIN"
+        err "  3. Firewall must allow inbound TCP 80 + 443"
+        exit 1
+    fi
 fi
 
 # ---- SSL Certificate: qBittorrent ----
 if [ -n "$QBIT_DOMAIN" ]; then
     step_header "SSL Certificate — $QBIT_DOMAIN"
-    certbot --nginx -d "$QBIT_DOMAIN" --non-interactive --agree-tos -m "$EMAIL" 2>&1
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}  ✓ SSL certificate issued for $QBIT_DOMAIN${NC}"
+    if [ -f "/etc/letsencrypt/live/$QBIT_DOMAIN/fullchain.pem" ]; then
+        echo -e "${GREEN}  ✓ Certificate already exists for $QBIT_DOMAIN — skipping${NC}"
     else
-        warn "SSL certificate request failed for $QBIT_DOMAIN (non-fatal)"
-        warn "Manual: certbot --nginx -d $QBIT_DOMAIN"
+        certbot --nginx -d "$QBIT_DOMAIN" --non-interactive --agree-tos -m "$EMAIL" 2>&1
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ SSL certificate issued for $QBIT_DOMAIN${NC}"
+        else
+            warn "SSL certificate request failed for $QBIT_DOMAIN (non-fatal)"
+            warn "Manual: certbot --nginx -d $QBIT_DOMAIN"
+        fi
     fi
 fi
 
